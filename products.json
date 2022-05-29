@@ -1,0 +1,33 @@
+[
+  {
+  "id": 101,
+  "name": "pen",
+  "color": "blue",
+  "price": 1.0,
+  "inventory": 15,
+  "code": "p1001",
+  "publication": true,
+  "data": "2022-01-04"
+},
+  {
+    "id": 102,
+    "name": "notebook",
+    "color": "red",
+    "price": 3.85,
+    "inventory": 8,
+    "code": "n2002",
+    "publication": true,
+    "data": "2022-02-03"
+  },
+  {
+    "id": 103,
+    "name": "pencil",
+    "color": "yellow",
+    "price": 0.70,
+    "inventory": 20,
+    "code": "n3003",
+    "publication": true,
+    "data": "2022-01-02"
+  }
+]
+
