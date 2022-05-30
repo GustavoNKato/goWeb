@@ -33,11 +33,12 @@ func productHandler(ctx *gin.Context) {
 
 	jsonFile, err := os.ReadFile("products.json")
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Erro ao ler o arquivo -", err)
+
 	}
 
 	if err := json.Unmarshal(jsonFile, &products); err != nil {
-		log.Fatal(err)
+		log.Println("Erro no momento do decode no arquivo json -", err)
 	}
 
 	ctx.IndentedJSON(http.StatusOK, products)
