@@ -3,46 +3,46 @@ package main
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 )
 
 func main() {
 
 	router := gin.Default()
+	router.GET("/db", addData)
 	router.GET("/products", productHandler)
 	router.GET("/products/:id", getProductByIdHandler)
+	router.POST("/products", createProduct)
 	router.Run()
 
 }
 
+var lastID int
+var products []product
+
 type product struct {
 	Id          int     `json:"id"`
-	Name        string  `json:"name"`
+	ProductName string  `json:"product_name"`
 	Color       string  `json:"color"`
 	Price       float64 `json:"price"`
 	Inventory   int     `json:"inventory"`
-	Code        string  `json:"code"`
+	ProductCode string  `json:"product_code"`
 	Publication bool    `json:"publication"`
 	Data        string  `json:"data"`
 }
 
 func productHandler(ctx *gin.Context) {
-	var products []product
-	products = readJsonFile(products)
 	ctx.IndentedJSON(http.StatusOK, products)
 }
 
 func getProductByIdHandler(ctx *gin.Context) {
-	var products []product
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		log.Println("precisa ser um int - ", err)
 	}
-
-	products = readJsonFile(products)
 
 	for _, product := range products {
 		if product.Id == id {
@@ -54,8 +54,30 @@ func getProductByIdHandler(ctx *gin.Context) {
 
 }
 
+func createProduct(ctx *gin.Context) {
+	var newProduct product
+	if err := ctx.ShouldBindJSON(&newProduct); err != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	lastID++
+	newProduct.Id = lastID
+
+	products = append(products, newProduct)
+	ctx.IndentedJSON(http.StatusCreated, newProduct)
+}
+
+func addData(ctx *gin.Context) {
+	products = readJsonFile(products)
+	lastID = 3
+	ctx.IndentedJSON(http.StatusOK, products)
+}
+
 func readJsonFile(products []product) []product {
-	jsonFile, err := os.ReadFile("products.json")
+	jsonFile, err := ioutil.ReadFile("products.json")
 	if err != nil {
 		log.Println("erro ao ler o arquivo -", err)
 	}
