@@ -21,6 +21,7 @@ type Repository interface {
 	GetById(id int) (Product, error)
 	Store(id int, productName, color string, price float64, amount int) (Product, error)
 	LastID() (int, error)
+	Update(id int, productName, color string, price float64, amount int) (Product, error)
 }
 
 type repository struct{}
@@ -47,6 +48,22 @@ func (r *repository) Store(id int, productName, color string, price float64, amo
 
 func (r *repository) LastID() (int, error) {
 	return lastID, nil
+}
+
+func (r *repository) Update(id int, productName, color string, price float64, amount int) (Product, error) {
+	product := Product{ProductName: productName, Color: color, Price: price, Amount: amount}
+	updated := false
+	for i := range products {
+		if products[i].Id == id {
+			product.Id = id
+			products[i] = product
+			updated = true
+		}
+	}
+	if !updated {
+		return Product{}, fmt.Errorf("produto %d não encontrado", id)
+	}
+	return product, nil
 }
 
 func NewRepository() Repository {

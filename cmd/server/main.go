@@ -16,5 +16,6 @@ func main() {
 	productRouter.POST("/", product.Store())
 	productRouter.GET("/", product.GetAll())
 	productRouter.GET("/:id", product.GetById())
+	productRouter.PUT("/id", product.Update())
 	router.Run()
 }

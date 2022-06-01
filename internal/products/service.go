@@ -4,6 +4,7 @@ type Service interface {
 	GetAll() ([]Product, error)
 	GetById(id int) (Product, error)
 	Store(productName, color string, price float64, amount int) (Product, error)
+	Update(id int, productName, color string, price float64, amount int) (Product, error)
 }
 
 type service struct {
@@ -39,6 +40,10 @@ func (s *service) Store(productName, color string, price float64, amount int) (P
 		return Product{}, err
 	}
 	return product, nil
+}
+
+func (s *service) Update(id int, productName, color string, price float64, amount int) (Product, error) {
+	return s.repository.Update(id, productName, color, price, amount)
 }
 
 func NewService(r Repository) Service {
